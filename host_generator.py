@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 from datetime import datetime
-import numpy as np
 import os
 import yaml
 
@@ -20,9 +19,9 @@ def process_static(data):
         new_output_str = ('%s\n%s' % (new_output_str, "################################################################################"))
         data.pop("header")
     
-    # 
+    # TODO: Clean this up
     output_array = data
-
+    # TODO: Clean this up
     # Sort the data
     myKeys = list(output_array.keys())
     myKeys.sort()
