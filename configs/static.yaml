@@ -1,0 +1,11 @@
+type: static
+header: "Static File"
+2.2.2.2:
+  - a.funny.domain.com
+1.5.5.1:
+  - boo.sort.this
+3.3.3.3:
+  - b.funny.domain.com
+  - alt-b.funny.domain.com
+1.1.1.1:
+  - one.one.one.one
