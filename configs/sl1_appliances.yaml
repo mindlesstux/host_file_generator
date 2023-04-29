@@ -1,0 +1,9 @@
+type: sl1_appliance
+header: "SL1 Appliances"
+API_HOST: sl1-ap
+API_PATH_1: "/api/appliance?hide_filterinfo=1&limit=1000&extended_fetch=1"
+API_PATH_2: "/api/collector_group?hide_filterinfo=1&limit=1000&extended_fetch=1"
+API_USER: None
+API_PASS: None
+# Group by: none, ip, cugid, cugname
+GROUP_BY: none
