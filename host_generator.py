@@ -51,40 +51,44 @@ def process_sl1_appliance(data):
     # Build the URL
     url = "https://%s%s" % (api_host, api_path)
     response = requests.request("GET", url, auth=(api_user, api_pass), verify=False)
-    tmp = response.text
-    tmp_apps = json.loads(tmp)
-    tmp_data = {}
-    tmp_data['cu'] = {}
-    tmp_data['mc'] = {}
-    tmp_data['db'] = {}
-    tmp_data['ap'] = {}
-    for k, v in tmp_apps.items():
-        module_id = k.split('/')[3]
-        module_ip = v['ip']
-        module_name = v['name']
-        module_descr = v['descr']
-        tmp_data[v['type']][module_ip] = [module_id, module_ip, module_name, module_descr]            
+    # If we dont have a authorization problem
+    if response.status_code not in [401, 402, 403, 404, 405, 406, 407, 408, 409, 410]:
+        tmp = response.text
+        tmp_apps = json.loads(tmp)
+        tmp_data = {}
+        tmp_data['cu'] = {}
+        tmp_data['mc'] = {}
+        tmp_data['db'] = {}
+        tmp_data['ap'] = {}
+        for k, v in tmp_apps.items():
+            module_id = k.split('/')[3]
+            module_ip = v['ip']
+            module_name = v['name']
+            module_descr = v['descr']
+            tmp_data[v['type']][module_ip] = [module_id, module_ip, module_name, module_descr]            
 
-    ## TODO: Add a sort here by IP address
-    ## TODO: Overrides (someway, somehow)
-    ## TODO: Group toggle by type or collector group
-    #### Group by: none, ip, cugid, cugname
+        ## TODO: Add a sort here by IP address
+        ## TODO: Overrides (someway, somehow)
+        ## TODO: Group toggle by type or collector group
+        #### Group by: none, ip, cugid, cugname
 
-    z = {"cu": "Data Collectors (CUs)", "mc": "Message Collectors (MCs)", "db": "Database (DBs)", "ap": "Admin Portals (APs)", }
-    for g, h in z.items():
-        new_output_str +=  generate_header(title=h, width=30)
-        x = tmp_data[g]
-        for k, v in x.items():    
-            # My work specific shortener
-            y = str(v[2]).split("-")
-            y.pop(0)
-            y = '.'.join(y)
-            new_output_str = ('%s\n %-16s  module-%-6s mod-%-5s %-30s  %-30s   # %s' % (new_output_str, v[1], v[0], v[0], y, v[2], v[3]))
+        z = {"cu": "Data Collectors (CUs)", "mc": "Message Collectors (MCs)", "db": "Database (DBs)", "ap": "Admin Portals (APs)", }
+        for g, h in z.items():
+            new_output_str +=  generate_header(title=h, width=30)
+            x = tmp_data[g]
+            for k, v in x.items():    
+                # My work specific shortener
+                y = str(v[2]).split("-")
+                y.pop(0)
+                y = '.'.join(y)
+                new_output_str = ('%s\n %-16s  module-%-6s mod-%-5s %-30s  %-30s   # %s' % (new_output_str, v[1], v[0], v[0], y, v[2], v[3]))
 
-    # x.x.x.x   module-YY   em7-cu1-ral     # descr
-    time.sleep(1)
-    return new_output_str
-
+        # x.x.x.x   module-YY   em7-cu1-ral     # descr
+        time.sleep(1)
+        return new_output_str
+    else:
+        return ""
+    
 def process_static(data):
     # String to be returned
     new_output_str = ""
